@@ -12,7 +12,7 @@ As comparison, we also ran the same pipeline with [IMX214](https://shop.luxonis.
 
 ![2 IMX577](docs/2-imx577.jpeg)
 
-- 2-IMX219: OAK-FFC-3P with two IMX214 modules on CAM_B and CAM_C
+- 2-IMX214: OAK-FFC-3P with two IMX214 modules on CAM_B and CAM_C
 
 ![2 IMX214](docs/2-imx214.jpeg)
 
@@ -50,12 +50,12 @@ With configuration 2-IMX577, one camera will return 0 FPS and never recover duri
 workstation host
 
 - 2-IMX577: failed 9 times out of 30 times 
-- 2-IMX219: failed 0 times out of 30 times
+- 2-IMX214: failed 0 times out of 30 times
 
 pi host
 
 - 2-IMX577: failed 11 times out of 30 times
-- 2-IMX219: failed 0 times out of 30 times
+- 2-IMX214: failed 0 times out of 30 times
 
 ## Other details
 

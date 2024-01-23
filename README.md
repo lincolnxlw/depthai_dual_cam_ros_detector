@@ -54,8 +54,15 @@ workstation host
 
 pi host
 
-- 2-IMX577:
-- 2-IMX219:
+- 2-IMX577: failed 11 times out of 30 times
+- 2-IMX219: failed 0 times out of 30 times
 
+## Other details
 
+All connections during the testing are tripple checked. I also randomly paired up IMX577 modules and the result persist.
+
+![Detail 1](docs/2-imx577-detail-1.jpeg)
+![Detail 2](docs/2-imx577-detail-2.jpeg)
+![Detail 3](docs/2-imx577-detail-3.jpeg)
+![All Tested Modules](docs/all-imx577.jpeg)
 

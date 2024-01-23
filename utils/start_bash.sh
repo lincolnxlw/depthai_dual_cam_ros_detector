@@ -7,5 +7,6 @@ docker container run -it --rm \
     -e DEPTHAI_LEVEL=debug \
     -v /dev/bus/usb:/dev/bus/usb \
     -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+    -v $HOME/.Xauthority:/root/.Xauthority:rw \
     lincolnxlw/my-depthai-ros \
     bash

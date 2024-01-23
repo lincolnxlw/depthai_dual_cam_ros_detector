@@ -8,6 +8,7 @@ fi
 docker buildx build --push \
     -f ./docker/Dockerfile \
     --memory=8g \
+    --target my-depthai-ros \
     --platform linux/amd64,linux/arm64/v8 \
     --build-arg USE_RVIZ=1 \
     --build-arg DEPTHAI_ROS_PATH="./tmp/depthai-ros" \

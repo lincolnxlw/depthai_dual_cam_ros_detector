@@ -59,20 +59,21 @@ include_directories(
 )
 
 add_executable(image_publisher_node src/image_publisher.cpp)
-add_executable(image_publisher_ros_node src/image_publisher_ros.cpp)
-add_executable(image_publisher_ros_single_detection_node src/image_publisher_ros_single_detection.cpp)
 target_link_libraries(image_publisher_node
-  ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
   depthai::core
   yaml-cpp
 )
+
+add_executable(image_publisher_ros_node src/image_publisher_ros.cpp)
 target_link_libraries(image_publisher_ros_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
   depthai::core
   yaml-cpp
 )
+
+add_executable(image_publisher_ros_single_detection_node src/image_publisher_ros_single_detection.cpp)
 target_link_libraries(image_publisher_ros_single_detection_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}

@@ -6,26 +6,9 @@
 #include <opencv2/dnn.hpp>
 #include <opencv2/highgui.hpp>
 
-#include <ros/ros.h>
-#include "camera_info_manager/camera_info_manager.h"
-#include "depthai_bridge/BridgePublisher.hpp"
-#include "depthai_bridge/ImageConverter.hpp"
-#include "depthai_bridge/ImgDetectionConverter.hpp"
-#include "sensor_msgs/Image.h"
-#include "vision_msgs/Detection2DArray.h"
-#include <std_msgs/String.h>
-#include <std_msgs/Bool.h>
-#include <std_srvs/SetBool.h>
-
-#include "depthai/device/DataQueue.hpp"
-#include "depthai/device/Device.hpp"
-#include "depthai/pipeline/Pipeline.hpp"
-#include "depthai/pipeline/node/ColorCamera.hpp"
-#include "depthai/pipeline/node/DetectionNetwork.hpp"
-#include "depthai/pipeline/node/XLinkOut.hpp"
+#include "depthai/depthai.hpp"
 
 #include <yaml-cpp/yaml.h>
-
 
 class ImagePublisher {
  public:
@@ -53,7 +36,6 @@ class ImagePublisher {
                             std::vector<float>& anchors,
                             std::map<std::string, cv::dnn::MatShape>& anchor_masks,
                             std::vector<std::string>& labels);
-  ros::NodeHandle nh_;
 };
 
 bool ImagePublisher::checkFileExists(const std::string& file_path){
@@ -85,14 +67,11 @@ void ImagePublisher::readYoloV6YamlConfig(const std::string& config_path,
     coordinates = config["nn_config"]["NN_specific_metadata"]["coordinates"].as<int>();
     iou_threshold = config["nn_config"]["NN_specific_metadata"]["iou_threshold"].as<float>();
     confidence_threshold = config["nn_config"]["NN_specific_metadata"]["confidence_threshold"].as<float>();
-    
-    ROS_INFO("nn_width: %d, nn_height: %d, classes: %d, coordinates: %d, iou_threshold: %.2f, confidence_threshold: %.2f",
-             nn_width, nn_height, classes, coordinates, iou_threshold, confidence_threshold);
 
     labels.clear();
     for (const auto& label : config["mappings"]["labels"]) {
       labels.push_back(label.as<std::string>());
-      ROS_INFO("Found label: %s", label.as<std::string>().c_str());
+      std::cout << "Found label: " << label.as<std::string>() << std::endl;
     }
 
   } catch (const YAML::Exception& e) {
@@ -176,35 +155,31 @@ dai::Pipeline ImagePublisher::createPipeline(int fps,
   left_cam->preview.link(left_cam_image_xlink_out->input);
   left_cam_detection_nn->out.link(left_cam_det_xlink_out->input);
 
-  ROS_INFO("Pipeline created!");
+  std::cout << "Pipeline created!" << std::endl;
 
   return pipeline;
 }
 
 ImagePublisher::ImagePublisher()
-:
-  nh_("~")
 {
-  ROS_INFO("Starting depthai image publisher...");
+  std::cout << "Starting depthai image publisher..." << std::endl;
 
   // image config
-  int fps = 20;
-  nh_.param("fps", fps, 15);
+  int fps = 15;
   double focal_scale = 1.0;
-  nh_.param("focal_scale", focal_scale, 1.0);
 
   // nn config
   std::string nn_model_path, nn_config_path;
-  nh_.param("nn_model_path", nn_model_path, std::string("/catkin_ws/src/minimum_image_publisher/models/yolov6n_openvino_2022.1_6shave.blob"));
-  nh_.param("nn_config_path", nn_config_path, std::string("/catkin_ws/src/minimum_image_publisher/config/yolov6n.yaml"));
+  nn_model_path = std::string("/catkin_ws/src/station_depthai/minimum_image_publisher/models/yolov6n_openvino_2022.1_6shave.blob");
+  nn_config_path = std::string("/catkin_ws/src/station_depthai/minimum_image_publisher/config/yolov6n.yaml");
 
   if (!checkFileExists(nn_model_path)) {
-    ROS_ERROR("NN model not found!");
-    ros::shutdown();
+    std::cerr << "NN model not found!" << std::endl;
+    exit(1);
   }
   if (!checkFileExists(nn_config_path)) {
-    ROS_ERROR("NN config not found!");
-    ros::shutdown();
+    std::cerr << "NN config not found!" << std::endl;
+    exit(1);
   }
 
   int nn_width;
@@ -251,7 +226,7 @@ ImagePublisher::ImagePublisher()
   int left_frame_count = 0;
   auto start_time = std::chrono::steady_clock::now();
 
-  while (ros::ok()) {
+  while (true) {
     std::shared_ptr<dai::ImgFrame> right_cam_image_frame;
     std::shared_ptr<dai::ImgFrame> left_cam_image_frame;
     right_cam_image_frame = right_cam_image_q->tryGet<dai::ImgFrame>();
@@ -279,7 +254,6 @@ ImagePublisher::ImagePublisher()
 }
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "image_publisher_node");
   ImagePublisher image_publisher;
   return 0;
 }

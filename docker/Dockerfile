@@ -19,6 +19,8 @@ RUN cd .$WS/ \
     && apt-get update \
     && rosdep install --from-paths src --ignore-src -y
 
+RUN rm -rf .$WS/src/depthai-ros/depthai_examples
+
 RUN if [ "$BUILD_SEQUENTIAL" = "1" ] ; then cd .$WS/ && . /opt/ros/noetic/setup.sh && catkin build -j1 -l1; else cd .$WS/ && . /opt/ros/noetic/setup.sh && catkin build; fi 
 
 RUN if [ "$USE_RVIZ" = "1" ] ; then echo "RVIZ ENABLED" && sudo apt install -y ros-noetic-rviz ros-noetic-rviz-imu-plugin ; else echo "RVIZ NOT ENABLED"; fi

@@ -5,6 +5,7 @@ docker container run --net=host -it --rm \
     -e DISPLAY=$DISPLAY \
     -e QT_X11_NO_MITSHM=1 \
     -e DEPTHAI_LEVEL=debug \
+    -e DEPTHAI_DEBUG=1 \
     -v /dev/bus/usb:/dev/bus/usb \
     -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
     -v $HOME/.Xauthority:/root/.Xauthority:rw \

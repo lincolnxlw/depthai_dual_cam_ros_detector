@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <csignal>
 #include <iostream>
 #include <fstream>
 
@@ -9,6 +10,13 @@
 #include "depthai/depthai.hpp"
 
 #include <yaml-cpp/yaml.h>
+
+
+volatile std::sig_atomic_t signal_received = 0;
+
+void signalHandler(int signal) {
+    signal_received = 1;
+}
 
 class ImagePublisher {
  public:
@@ -170,8 +178,10 @@ ImagePublisher::ImagePublisher()
 
   // nn config
   std::string nn_model_path, nn_config_path;
-  nn_model_path = std::string("/catkin_ws/src/minimum_image_publisher/models/yolov6n_openvino_2022.1_6shave.blob");
-  nn_config_path = std::string("/catkin_ws/src/minimum_image_publisher/config/yolov6n.yaml");
+  nn_model_path = std::string("/catkin_ws/src/station_depthai/minimum_image_publisher/models/yolov6n_openvino_2022.1_6shave.blob");
+  nn_config_path = std::string("/catkin_ws/src/station_depthai/minimum_image_publisher/config/yolov6n.yaml");
+  //nn_model_path = std::string("/workspaces/depthai_catkin_ws/src/station_depthai/minimum_image_publisher/models/yolov6n_openvino_2022.1_6shave.blob");
+  //nn_config_path = std::string("/workspaces/depthai_catkin_ws/src/station_depthai/minimum_image_publisher/config/yolov6n.yaml");
 
   if (!checkFileExists(nn_model_path)) {
     std::cerr << "NN model not found!" << std::endl;
@@ -226,7 +236,9 @@ ImagePublisher::ImagePublisher()
   int left_frame_count = 0;
   auto start_time = std::chrono::steady_clock::now();
 
-  while (true) {
+  std::signal(SIGINT, signalHandler);
+
+  while (!signal_received) {
     std::shared_ptr<dai::ImgFrame> right_cam_image_frame;
     std::shared_ptr<dai::ImgFrame> left_cam_image_frame;
     right_cam_image_frame = right_cam_image_q->tryGet<dai::ImgFrame>();

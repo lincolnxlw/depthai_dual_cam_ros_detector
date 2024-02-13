@@ -10,4 +10,4 @@ docker container run --net=host -it --rm \
     -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
     -v $HOME/.Xauthority:/root/.Xauthority:rw \
     lincolnxlw/my-depthai-ros \
-    bash -c "cd /catkin_ws/devel/lib/minimum_image_publisher && pipeline_graph run './image_publisher_node'"
+    bash -c "cd /catkin_ws/devel/lib/minimum_image_publisher && ./image_publisher_node"

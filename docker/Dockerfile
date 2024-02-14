@@ -25,9 +25,10 @@ RUN apt purge -y ros-noetic-depthai \
     && cd depthai-core && git checkout eb51d419f0616c90b17e2a13c09ee7f59764f8ea \
     && git submodule update --init --recursive
 
-RUN cd /root/src/depthai-core \
-    && cmake -S . -B build -D'CMAKE_INSTALL_PREFIX=/usr/local' \
-    && cmake --build build --target install
+RUN rm -rf /root/.hunter \
+    && cd /root/src/depthai-core \
+    && cmake -S . -B build -D'CMAKE_INSTALL_PREFIX=/usr/local' -D'BUILD_SHARED_LIBS=ON' \
+    && cmake --build build --parallel 8 --target install
 
 RUN rm -rf .$WS/src/depthai-ros/depthai_examples
 RUN if [ "$BUILD_SEQUENTIAL" = "1" ] ; then cd .$WS/ && . /opt/ros/noetic/setup.sh && catkin build -j1 -l1; else cd .$WS/ && . /opt/ros/noetic/setup.sh && catkin build; fi 

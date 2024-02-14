@@ -26,7 +26,7 @@ RUN apt purge -y ros-noetic-depthai \
     && git submodule update --init --recursive
 
 RUN cd /root/src/depthai-core \
-    && cmake -S . -B build -D'CMAKE_INSTALL_PREFIX=/usr/local' \
+    && cmake -S . -B build -D'CMAKE_INSTALL_PREFIX=/usr/local' -D'BUILD_SHARED_LIBS=ON' \
     && cmake --build build --target install
 
 RUN rm -rf .$WS/src/depthai-ros/depthai_examples

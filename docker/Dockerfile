@@ -38,23 +38,22 @@ RUN echo "if [ -f ${WS}/devel/setup.bash ]; then source ${WS}/devel/setup.bash; 
 ENTRYPOINT [ "/ws/src/depthai-ros/entrypoint.sh" ]
 CMD ["zsh"]
 
-#FROM depthai-ros as my-depthai-ros
-#
-#SHELL ["/bin/bash", "-c"]
-#
-#COPY ./src/minimum_image_publisher /catkin_ws/src/minimum_image_publisher
-#
-#RUN source "/opt/ros/noetic/setup.bash" \
-#    && source "/ws/devel/setup.bash" \
-#    && cd /catkin_ws \
-#    && catkin build
-#
-## install pipeline graph
-#RUN apt update \
-#    && apt install -y python3-pip \
-#    && pip install git+https://github.com/luxonis/depthai_pipeline_graph.git \
-#    && pip install --extra-index-url https://artifacts.luxonis.com/artifactory/luxonis-python-snapshot-local/ depthai
-#
-#COPY ./docker/entrypoint.sh /
-#RUN echo "if [ -f /catkin_ws/devel/setup.bash ]; then source /catkin_ws/devel/setup.bash; fi" >> $HOME/.bashrc
-#ENTRYPOINT ["/entrypoint.sh"]
+FROM depthai-ros as my-depthai-ros
+
+SHELL ["/bin/bash", "-c"]
+
+COPY ./src/minimum_image_publisher /catkin_ws/src/minimum_image_publisher
+
+RUN source "/opt/ros/noetic/setup.bash" \
+    && source "/ws/devel/setup.bash" \
+    && cd /catkin_ws \
+    && catkin build
+
+RUN apt update \
+    && apt install -y python3-pip \
+    && pip install git+https://github.com/luxonis/depthai_pipeline_graph.git \
+    && pip install --extra-index-url https://artifacts.luxonis.com/artifactory/luxonis-python-snapshot-local/ depthai
+
+COPY ./docker/entrypoint.sh /
+RUN echo "if [ -f /catkin_ws/devel/setup.bash ]; then source /catkin_ws/devel/setup.bash; fi" >> $HOME/.bashrc
+ENTRYPOINT ["/entrypoint.sh"]

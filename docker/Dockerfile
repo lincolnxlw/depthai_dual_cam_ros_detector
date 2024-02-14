@@ -25,7 +25,8 @@ RUN apt purge -y ros-noetic-depthai \
     && cd depthai-core && git checkout eb51d419f0616c90b17e2a13c09ee7f59764f8ea \
     && git submodule update --init --recursive
 
-RUN cd /root/src/depthai-core \
+RUN rm -rf /root/.hunter \
+    && cd /root/src/depthai-core \
     && cmake -S . -B build -D'CMAKE_INSTALL_PREFIX=/usr/local' -D'BUILD_SHARED_LIBS=ON' \
     && cmake --build build --target install
 

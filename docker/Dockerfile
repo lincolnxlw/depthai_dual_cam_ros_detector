@@ -28,7 +28,7 @@ RUN apt purge -y ros-noetic-depthai \
 RUN rm -rf /root/.hunter \
     && cd /root/src/depthai-core \
     && cmake -S . -B build -D'CMAKE_INSTALL_PREFIX=/usr/local' -D'BUILD_SHARED_LIBS=ON' \
-    && cmake --build build --target install
+    && cmake --build build --parallel 8 --target install
 
 RUN rm -rf .$WS/src/depthai-ros/depthai_examples
 RUN if [ "$BUILD_SEQUENTIAL" = "1" ] ; then cd .$WS/ && . /opt/ros/noetic/setup.sh && catkin build -j1 -l1; else cd .$WS/ && . /opt/ros/noetic/setup.sh && catkin build; fi 

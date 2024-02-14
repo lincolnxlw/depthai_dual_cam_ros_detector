@@ -5,7 +5,7 @@ if [ ! -d "tmp/depthai-ros" ]; then
     git clone -b noetic https://github.com/luxonis/depthai-ros.git tmp/depthai-ros/
 fi
 
-docker buildx build --load \
+docker build \
     -f ./docker/Dockerfile \
     --memory=8g \
     --platform linux/amd64 \

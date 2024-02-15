@@ -178,8 +178,8 @@ ImagePublisher::ImagePublisher()
 
   // nn config
   std::string nn_model_path, nn_config_path;
-  nn_model_path = std::string("/catkin_ws/src/station_depthai/minimum_image_publisher/models/yolov6n_openvino_2022.1_6shave.blob");
-  nn_config_path = std::string("/catkin_ws/src/station_depthai/minimum_image_publisher/config/yolov6n.yaml");
+  nn_model_path = std::string("/catkin_ws/src/minimum_image_publisher/models/yolov6n_openvino_2022.1_6shave.blob");
+  nn_config_path = std::string("/catkin_ws/src/minimum_image_publisher/config/yolov6n.yaml");
   //nn_model_path = std::string("/workspaces/depthai_catkin_ws/src/station_depthai/minimum_image_publisher/models/yolov6n_openvino_2022.1_6shave.blob");
   //nn_config_path = std::string("/workspaces/depthai_catkin_ws/src/station_depthai/minimum_image_publisher/config/yolov6n.yaml");
 
